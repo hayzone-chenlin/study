@@ -1,0 +1,2 @@
+1.在windows上完成MongoDB、MongoVUE的安装，并可正常访问
+2.在Yii中使用YiiMongoDBSuite完成article集合的CRUD（注：article 有两个字段，title和content）

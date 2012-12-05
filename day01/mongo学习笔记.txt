@@ -1,0 +1,118 @@
+mongodb 下载：
+官网下载
+
+mongodb 安装：
+1. 自启动服务
+>mongod --dbpath d:\mongodb\data
+2. 安装Windows服务
+>mongod --dbpath=d:\mongodb\data --logpath=d:\mongodb\logs\mongodb.log --install
+>net start mongodb
+
+mongodb 启动
+>mongo.exe
+
+mongodb 切换数据库
+>use mydb
+>switch ....
+
+mongodb 显示当前数据库
+>db
+>mydb
+
+insert (db.[dbname].insert([var]))
+>post = {title: "The title"}
+>{ title: "The title" }
+>db.blog.insert(post)
+
+find (db.[dbname].find())
+>db.blog.find()
+>{ "_id" : ObjectId("50a7a37f86fad8083e1215da"), title: "The title"}
+条件查询
+>db.blog.find({title: "The title"})
+选择性KEY
+>db.blog.find({}, {title: 1}) // 希望出现 title
+>db.blog.find({}, {title: 0}) // 不希望出现 title
+
+findOne (db.[dbname].findOne())
+>db.blog.findOne()
+>{ "_id" : ObjectId("50a7a37f86fad8083e1215da"), title: "The title"}
+
+update (db.[dbname].update([{condition}], [var]))
+>post.comments = []
+>[ ]
+>db.blog.update({title: "The title"}, post)
+
+remove (db.[dbname].remove([{condition}])) 无参数全部删除
+>db.blog.remove({title: "The title"})
+
+Shell help
+>help
+
+查看函数原型 db.foo.[function]
+>db.foo.update
+>function (query, obj, upsert, multi) {
+...
+
+数据类型（JavaScript JSON）
+null, 布尔， 数字，字符串，数组，对象
+对象
+{x: ObjectId()}
+日期
+{x: new Date()}
+正则
+{x: /foobar/i}
+代码
+{x: function(){/* ... */}}
+未定义
+{x: undefined}
+数组
+{x: {"a", "b", "c"}}
+内嵌文档
+{x: {"foo": "bar"}}
+
+id序列
+时间戳{4}机器{3}PID{2}计数器{3}
+
+mongodb 导入
+>mongoimport
+
+drop collection 删除集合
+>db.drop_collection("bar")
+
+使用修改器（递增例子）
+>db.analytics.update({"url": "www.example.com"}, {"$inc": {"pageviews": 1}})
+>db.analytics.find() // 每一次find pageviews增加1
+
+修改器$set 类似SQL中的update set，但是不存在的键会自动创建，存在覆盖原值
+
+修改器$unset 与$set相反
+
+数组修改器$push 在已有元素末尾增加一个
+
+数组修改器$pop 弹出元素末尾 {$pop: {key: -1}}头部删除 {$pop: {key: 1}} 末尾删除
+
+数组修改器$ne 如果数组中不存在，就加入
+
+数组修改器$addToSet 完成$ne相同的事情，但是可以避免重复
+
+数组修改器$each 可以添加多个值
+
+数组定位修改器$pull 将匹配的元素删除 {$pull: 1} 对于数组[1, 1, 2, 1]，执行后只剩下 2
+
+upsert 特殊修改，没有文档则创建一个新文档，其他用法和update类型
+
+save Shell 帮助程序 save是shell函数，文档存在，执行update，文档不存在执行insert
+
+执行多个update 只要在调用update函数时将第四个参数设置为true即可
+
+返回已更新的文档
+db.runCommand({"findAndModify": "processes"})
+
+条件查询
+"$lt", "$lte", "$gt", "$gte", "$ne" 分别代表 <,<=, >, >=, <>\!=
+
+OR查询
+"$or"
+
+IN查询
+"$in"、"$nin"
