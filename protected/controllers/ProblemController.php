@@ -1,24 +1,43 @@
 <?php
 
-class ProblemController extends Controller {
+class ProblemController extends CController {
 	public function actionList(){
-	$model = new Problem();
-	$criteria = new CDbCriteria();
-	$criteria-> with="reply";
-	$criteria->alias ="p";
-	$criteria->select="p.content.cont(problem.id) as num";
-	$criteria->	compare(p.id, $id,false);
-	$criteria->group = 'reply.id';
-	$criteria->order = 'num desc';
-}
-//	 if(isset($_GET['Problem'])) {
-//	 	 $model->setAttributes($_GET['Problem']);
-//	 	}
-	public function actionCont(){
-		
+		$model = new Problem();
+		$model->keyword_id = 1;
+	    $models = $model->search(1);
+	    $this->render('list',array(
+   		'models'=>$models, 
+    	));
+    
+	} 	
+	
+	public function actionNalist(){
+		$model = new Problem();
+		$model->keyword_id =2;
+		$models = $model->osearch(1);
+		$this->render('nalist',array(
+		'models'=>$models, 
+		));	
 	}
-	 		 
 
+ 	public function actionAnswerlist(){
+ 		$model = new Problem();
+ 		//$model =$model->wsearch();
+ 		if(isset($_GET['Problem'])) {
+ 			$model->setAttributes($_GET['Problem']);
+ 			
+ 		}
+ 	} 
+
+	public function actionError(){
+		 if($error=Yii::app()->errorHandler->error)
+		 {
+		if(Yii::app()->request->isAjaxRequest)
+		 	echo $error['message'];
+			else
+		  	$this->render('error', $error);
+		}
+	}
 }
 
 ?>

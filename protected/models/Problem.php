@@ -18,6 +18,9 @@
  */
 class Problem extends CActiveRecord
 {
+	public $num;
+	public $votes;
+	public $allnum;
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return Problem the static model class
@@ -51,7 +54,7 @@ class Problem extends CActiveRecord
 			array('createtime', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, keyword_id, title, createtime, nickname, email, status', 'safe', 'on'=>'search'),
+			array('id, keyword_id, title, createtime, allnum,nickname, email, status,num,votes', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -73,12 +76,12 @@ class Problem extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => '±àºÅ',
-			'keyword_id' => '¹Ø¼ü´Ê',
-			'title' => 'ÎÊÌâ±êÌâ',
-			'createtime' => 'ÌáÎÊÊ±¼ä',
-			'nickname' => 'êÇ³Æ',
-			'email' => 'ÓÊÏä',
+			'id' => 'ç¼–å·',
+			'keyword_id' => 'å…³é”®è¯',
+			'title' => 'é—®é¢˜æ ‡é¢˜',
+			'createtime' => 'æé—®æ—¶é—´',
+			'nickname' => 'æ˜µç§°',
+			'email' => 'é‚®ç®±',
 			'status' => 'Status',
 		);
 	}
@@ -87,21 +90,63 @@ class Problem extends CActiveRecord
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
 	 */
-	public function search()
+	/*public function search($limit)
 	{
 		// Warning: Please modify the following code to remove attributes that
 		// should not be searched.
 
 		$criteria=new CDbCriteria;
+		$criteria->select = "t.*,(select count(*) from reply where problem_id = t.id) as num";
+		$criteria->compare('t.keyword_id',$this->keyword_id,false);
+		$criteria->compare('t.status',1);
+		$criteria->order = 'num desc';	
+		return new CActiveDataProvider($this, array(
+			'criteria'=>$criteria,
+			'pagination'=>array(
+		    	'pageSize'=>$limit,
+		    ),
+		));
+	}*/
+	public function search($limit){
+		$criteria=new CDbCriteria();
+	//	$criteria->select = "t.*,(select count(*) from reply where problem_id = t.id) as num";
+		$criteria->select = "t.*,(select count(*) from reply where problem_id = t.id) as num,
+		(select sum(answergood+answerbad) from reply where problem_id=t.id) as votes";
+		$criteria->compare('t.status',1);
+		$criteria->order = 'num desc,num desc';		
+		return new CActiveDataProvider($this,array(
+				'criteria'=>$criteria,
+				'pagination'=>array(
+						'pageSize'=>$limit,
+				),
+		));
+	}
+	
+	
+	public function osearch($limit)
+	{
+		// Warning: Please modify the following code to remove attributes that
+		// should not be searched.
 
+		$criteria=new CDbCriteria;
+		$criteria->select = "t.*";
+		$criteria->compare('t.status',0);
+		$criteria->order = 't.createtime desc';	
+		return new CActiveDataProvider($this, array(
+			'criteria'=>$criteria,
+			'pagination'=>array(
+					'pageSize'=>$limit,
+				),
+		));
+	}
+	
+	
+	public function wsearch()
+	{
+
+		$criteria=new CDbCriteria;
 		$criteria->compare('id',$this->id);
-		$criteria->compare('keyword_id',$this->keyword_id);
-		$criteria->compare('title',$this->title,true);
-		$criteria->compare('createtime',$this->createtime,true);
-		$criteria->compare('nickname',$this->nickname,true);
-		$criteria->compare('email',$this->email,true);
-		$criteria->compare('status',$this->status);
-
+		$criteria->compare('title',$this->title,true);		
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));

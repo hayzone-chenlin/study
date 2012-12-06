@@ -12,6 +12,7 @@
  */
 class Keyword extends CActiveRecord
 {
+	public $keyword;
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return Keyword the static model class
@@ -73,16 +74,14 @@ class Keyword extends CActiveRecord
 	 */
 	public function search()
 	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
 
 		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id);
-		$criteria->compare('keyword',$this->keyword,true);
-
+		$criteria->compare('id',$this->id,true);
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
+//			'pagination'=>array(
+//		    	'pageSize'=>1,
+//			),
 		));
 	}
 }

@@ -93,15 +93,10 @@ class Reply extends CActiveRecord
 		// should not be searched.
 
 		$criteria=new CDbCriteria;
-
-		$criteria->compare('id',$this->id);
-		$criteria->compare('problem_id',$this->problem_id);
-		$criteria->compare('content',$this->content,true);
-		$criteria->compare('nickname',$this->nickname,true);
-		$criteria->compare('answerbad',$this->answerbad);
-		$criteria->compare('answergood',$this->answergood);
-		$criteria->compare('email',$this->email,true);
-		$criteria->compare('status',$this->status);
+		$criteria->select = "t.*";
+//		$criteria->compare('t.keyword_id',$this->keyword_id,false);
+		$criteria->compare('t.status',0);
+		$criteria->order = 't.createtime desc';	
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
